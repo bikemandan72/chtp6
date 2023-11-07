@@ -1,0 +1,47 @@
+#ignore all
+*
+#unignore all with extensions
+!*.*
+#unignore all dirs
+!*/
+#combination above will ignore all files without extensions
+
+#ignore these dirs forever
+appD/
+appE/
+ch01/
+
+#ignore by now, unignore upon the learning progress
+ch02/
+ch03/
+ch04/
+ch05/
+ch06/
+ch07/
+ch08/
+ch09/
+ch10/
+ch11/
+
+ch13/
+ch14/
+ch15/
+ch16/
+ch17/
+ch18/
+ch19/
+ch20/
+ch21/
+ch22/
+ch23/
+
+#ignore supplied Deitels' files - examples of code
+fig*.c
+
+#ignore generated files (started with Chapter 11)
+*.txt
+*.dat 
+*.o
+
+#unignore Makefiles
+!Makefile
