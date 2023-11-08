@@ -120,7 +120,7 @@ int main(void)
 	outputTree(&rootPtr);
 	puts("");
 	
-	int searchKey = 10;
+	int searchKey = 6;
 	deleteNode(&rootPtr, searchKey);
 	
 	puts("");
@@ -152,61 +152,40 @@ void deleteNode(TreeNodePtr *treePtr, int searchKey)
 	if (searchPtr != NULL) {
 		printf("%d was found at node address %p (%d).\n",
 			searchKey, searchPtr, searchPtr->data);
+		TreeNodePtr *child = NULL;
 		if (parentPtr != NULL) {
 			printf("Parent node address is %p (%d).\n",
 				parentPtr, parentPtr->data);
-			TreeNodePtr *child = NULL;
 			if (parentPtr->leftPtr == searchPtr) {
 				child = &(parentPtr->leftPtr);
 			} else if (parentPtr->rightPtr == searchPtr) {
 				child = &(parentPtr->rightPtr);
 			}
-			if (searchPtr->leftPtr == NULL && searchPtr->rightPtr == NULL) {
-				//node is a leaf
-				*child = NULL;
-			} else if (searchPtr->leftPtr != NULL && searchPtr->rightPtr == NULL) {
-				//node is neither a leaf nor a root and has left child
-				*child = searchPtr->leftPtr;
-			} else if (searchPtr->leftPtr == NULL && searchPtr->rightPtr != NULL) {
-				//node is neither a leaf nor a root and has right child
-				*child = searchPtr->rightPtr;
-			} else {
-				//node is neither a leaf nor a root and has 2 childs
-				//we voluntarily choose the right child to be connected to parent
-				*child = searchPtr->rightPtr;
-				//now look for the leftmost child
-				TreeNodePtr leftmostPtr = searchPtr->rightPtr;
-				while (leftmostPtr->leftPtr != NULL) {
-					leftmostPtr = leftmostPtr->leftPtr;
-				}
-				//and connect it to the left child of searchPtr
-				leftmostPtr->leftPtr = searchPtr->leftPtr;
-			}
 		} else {
-			//node is a root of the tree
 			printf("Value %d found at the root node of the tree %d(%p).\n",
 				searchKey, (*treePtr)->data, *treePtr);
-			if (searchPtr->leftPtr == NULL && searchPtr->rightPtr == NULL) {
-				//tree contains only the root
-				*treePtr = NULL;
-			} else if (searchPtr->leftPtr != NULL && searchPtr->rightPtr == NULL) {
-				//tree only has left subtree
-				*treePtr = searchPtr->leftPtr;
-			} else if (searchPtr->leftPtr == NULL && searchPtr->rightPtr != NULL) {
-				//tree only has right subtree
-				*treePtr = searchPtr->rightPtr;
-			} else {
-				//tree has 2 subtrees
-				//we voluntarily choose the right subtree to be the new root
-				*treePtr = searchPtr->rightPtr;
-				//now look for the leftmost child
-				TreeNodePtr leftmostPtr = searchPtr->rightPtr;
-				while (leftmostPtr->leftPtr != NULL) {
-					leftmostPtr = leftmostPtr->leftPtr;
-				}
-				//and connect it to the left child of searchPtr
-				leftmostPtr->leftPtr = searchPtr->leftPtr;
+			child = treePtr;
+		}
+		if (searchPtr->leftPtr == NULL && searchPtr->rightPtr == NULL) {
+			//node is a leaf (or tree root has no subtrees)
+			*child = NULL;
+		} else if (searchPtr->leftPtr != NULL && searchPtr->rightPtr == NULL) {
+			//node isn't a leaf and has left child (or tree has only left subtree)
+			*child = searchPtr->leftPtr;
+		} else if (searchPtr->leftPtr == NULL && searchPtr->rightPtr != NULL) {
+			//node isn't a leaf and has right child (or tree has only right subtree)
+			*child = searchPtr->rightPtr;
+		} else {
+			//node has 2 childs (or tree has 2 subtrees)
+			//I voluntarily choose the right child (or subtree) to be connected to parent
+			*child = searchPtr->rightPtr;
+			//now look for the leftmost child (or subtree)
+			TreeNodePtr leftmostPtr = searchPtr->rightPtr;
+			while (leftmostPtr->leftPtr != NULL) {
+				leftmostPtr = leftmostPtr->leftPtr;
 			}
+			//and connect it to the left child of searchPtr (or subtree)
+			leftmostPtr->leftPtr = searchPtr->leftPtr;
 		}
 		free(searchPtr);
 		searchPtr = NULL;
