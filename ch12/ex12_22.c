@@ -115,12 +115,14 @@ int main(void)
 	
 	puts("");
 	printf("Random generator seed is %d\n", seed);
-	printf("Root node is %d\n", rootPtr->data);
+	if (rootPtr != NULL) {
+		printf("Root node is %d\n", rootPtr->data);
+	}
 	puts("");
 	outputTree(&rootPtr);
 	puts("");
 	
-	int searchKey = 6;
+	int searchKey = 4;
 	deleteNode(&rootPtr, searchKey);
 	
 	puts("");
@@ -146,6 +148,9 @@ void deleteNode(TreeNodePtr *treePtr, int searchKey)
 		}
 	}
 	if (bypass) {
+		if (*treePtr == NULL) {
+			printf("%d wasn't found in the tree.\n", searchKey);
+		}
 		return;
 	}
 	//delete node if value is found
@@ -189,8 +194,6 @@ void deleteNode(TreeNodePtr *treePtr, int searchKey)
 		}
 		free(searchPtr);
 		searchPtr = NULL;
-	} else {
-		printf("%d wasn't found in the tree %p.\n", searchKey, *treePtr);
 	}
 }
 
